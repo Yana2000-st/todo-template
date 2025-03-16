@@ -45,13 +45,13 @@ body {
 	display: none;
 }
 
-.todoapp {
+/* .todoapp {
 	background: #fff;
 	margin: 130px 0 40px 0;
 	position: relative;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
 	            0 25px 50px 0 rgba(0, 0, 0, 0.1);
-}
+} */
 
 .todoapp input::-webkit-input-placeholder {
 	font-style: italic;
@@ -71,7 +71,7 @@ body {
 	color: rgba(0, 0, 0, 0.4);
 }
 
-.todoapp h1 {
+/* .todoapp h1 {
 	position: absolute;
 	top: -140px;
 	width: 100%;
@@ -82,9 +82,9 @@ body {
 	-webkit-text-rendering: optimizeLegibility;
 	-moz-text-rendering: optimizeLegibility;
 	text-rendering: optimizeLegibility;
-}
+} */
 
-.new-todo,
+/* .new-todo,
 .edit {
 	position: relative;
 	margin: 0;
@@ -107,18 +107,18 @@ body {
 	border: none;
 	background: rgba(0, 0, 0, 0.003);
 	box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
-}
+} */
 
-.main {
+/* .main {
 	position: relative;
 	z-index: 2;
 	border-top: 1px solid #e6e6e6;
-}
+} */
 
 .toggle-all {
 	width: 1px;
 	height: 1px;
-	border: none; /* Mobile Safari */
+	border: none;
 	opacity: 0;
 	position: absolute;
 	right: 100%;
@@ -147,13 +147,13 @@ body {
 	color: #737373;
 }
 
-.todo-list {
+/* .todo-list {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-}
+} */
 
-.todo-list li {
+/* .todo-list li {
 	position: relative;
 	font-size: 24px;
 	border-bottom: 1px solid #ededed;
@@ -161,14 +161,14 @@ body {
 
 .todo-list li:last-child {
 	border-bottom: none;
-}
+} */
 
-.todo-list li.editing {
+/* .todo-list li.editing {
 	border-bottom: none;
 	padding: 0;
-}
+} */
 
-.todo-list li.editing .edit {
+/* .todo-list li.editing .edit {
 	display: block;
 	width: calc(100% - 43px);
 	padding: 12px 16px;
@@ -177,22 +177,21 @@ body {
 
 .todo-list li.editing .view {
 	display: none;
-}
+} */
 
-.todo-list li .toggle {
+/* .todo-list li .toggle {
 	text-align: center;
 	width: 40px;
-	/* auto, since non-WebKit browsers doesn't support input styling */
 	height: auto;
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	margin: auto 0;
-	border: none; /* Mobile Safari */
+	border: none; 
 	-webkit-appearance: none;
 	appearance: none;
 	cursor: pointer;
-}
+} */
 
 .todo-list li .toggle {
 	opacity: 0;
@@ -280,7 +279,7 @@ body {
 	margin-bottom: -1px;
 }
 
-.footer {
+/* .footer {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -306,17 +305,17 @@ body {
 	            0 9px 1px -3px rgba(0, 0, 0, 0.2),
 	            0 16px 0 -6px #f6f6f6,
 	            0 17px 2px -6px rgba(0, 0, 0, 0.2);
-}
+} */
 
-.todo-count {
+/* .todo-count {
 	text-align: left;
 }
 
 .todo-count strong {
 	font-weight: 300;
-}
+} */
 
-.filters {
+/* .filters {
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -337,19 +336,19 @@ body {
 	text-decoration: none;
 	border: 1px solid transparent;
 	border-radius: 3px;
-}
+} */
 
-.filters li button:not(.selected) {
+/* .filters li button:not(.selected) {
 	cursor: pointer;
-}
+} */
 
-.filters li:hover button {
+/* .filters li:hover button {
 	border-color: rgba(175, 47, 47, 0.1);
 }
 
 .filters li button.selected {
 	border-color: rgba(175, 47, 47, 0.2);
-}
+} */
 
 .clear-completed,
 html .clear-completed:active {
@@ -385,11 +384,7 @@ html .clear-completed:active {
 	text-decoration: underline;
 }
 
-/*
-	Hack to remove background from Mobile Safari.
-	Can't use it globally since it destroys checkboxes in Firefox
-*/
-@media screen and (-webkit-min-device-pixel-ratio:0) {
+/* @media screen and (-webkit-min-device-pixel-ratio:0) {
 	.toggle-all,
 	.todo-list li .toggle {
 		background: none;
@@ -408,4 +403,4 @@ html .clear-completed:active {
 	.filters {
 		bottom: 10px;
 	}
-}
+} */
