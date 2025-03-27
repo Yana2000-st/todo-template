@@ -87,6 +87,15 @@ export default class App extends Component {
     }));
   };
 
+  editTask = (id, newText) => {
+    this.setState(({ tasks }) => {
+      const updatedTasks = tasks.map((task) =>
+        task.id === id ? { ...task, text: newText } : task
+      );
+      return { tasks: updatedTasks };
+    });
+  };
+
   render() {
 
     const filteredTasks = this.getFilteredTasks();
@@ -99,6 +108,7 @@ export default class App extends Component {
         <TaskList tasks = { filteredTasks } 
         onDeleteTask = { this.deleteTask } 
         onToggleTask = { this.toggleTask }
+        onEditTask = { this.editTask }
         />  
         <Footer 
           activeCount={ activeCount } 

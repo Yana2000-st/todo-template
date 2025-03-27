@@ -4,7 +4,7 @@ import Task from '../Task/Task';
 
 import './TaskList.css';
 
-const TaskList = ({ tasks, onDeleteTask, onToggleTask }) => {
+const TaskList = ({ tasks, onDeleteTask, onToggleTask, onEditTask }) => {
   
     return (
        <ul className="todo-list">
@@ -13,7 +13,9 @@ const TaskList = ({ tasks, onDeleteTask, onToggleTask }) => {
            key={ task.id } 
            task={ task } 
            onDeleteTask = { () => onDeleteTask(task.id) } 
-           onToggleTask = { () => onToggleTask(task.id) } />
+           onToggleTask = { () => onToggleTask(task.id) } 
+           onEditTask = {onEditTask} 
+           />
          ))}
        </ul>
     );
@@ -34,6 +36,7 @@ TaskList.propTypes = {
   })).isRequired,
   onDeleteTask: PropTypes.func.isRequired,
   onToggleTask: PropTypes.func.isRequired,
+  onEditTask: PropTypes.func.isRequired,
 };
 
 export default TaskList;
