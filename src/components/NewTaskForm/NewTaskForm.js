@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import './NewTaskForm.css';
+import PropTypes from "prop-types";
 
 export default class NewTaskForm extends Component {
 
@@ -39,4 +40,12 @@ export default class NewTaskForm extends Component {
     </header>
     );
   };
+};
+
+NewTaskForm.defaultProps = {
+  onAddTask: () => {},
+};
+
+NewTaskForm.propTypes = {
+  onAddTask: PropTypes.func.isRequired,
 };

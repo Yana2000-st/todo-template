@@ -1,9 +1,8 @@
 import React, { Component } from "react";  
-
+import { formatDistanceToNow } from "date-fns";
 import TaskList from "../TaskList/TaskList";  
 import Footer from "../Footer/Footer";
 import NewTaskForm from "../NewTaskForm/NewTaskForm";
-
 import './App.css';
 
 export default class App extends Component {
@@ -24,6 +23,7 @@ export default class App extends Component {
       text,
       completed: false,
       id: this.maxId++,
+      createdDate: new Date(),
     };
   };
 
