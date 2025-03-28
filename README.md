@@ -1,1 +1,1 @@
-https://yana2000-st.github.io/todo-template/
+https://todo-template-ochre.vercel.app/
