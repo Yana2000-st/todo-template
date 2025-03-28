@@ -1,42 +1,40 @@
-import React, { act, Component } from "react";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import './TaskFilter.css';
-import PropTypes from "prop-types";
 
 export default class TaskFilter extends Component {
-  
+  constructor(props) {
+    super(props);
+    this.render = this.render.bind(this);
+  }
   render() {
     const { activeFilter, onFilterChange } = this.props;
 
     return (
       <ul className="filters">
         <li>
-          <button 
-            className={activeFilter === "all" ? "selected" : ""}
-            onClick={() => onFilterChange("all")}
-          >
+          <button className={activeFilter === 'all' ? 'selected' : ''} onClick={() => onFilterChange('all')}>
             All
           </button>
         </li>
         <li>
-          <button 
-            className={activeFilter === "active" ? "selected" : ""}
-            onClick={() => onFilterChange("active")}
-          >
+          <button className={activeFilter === 'active' ? 'selected' : ''} onClick={() => onFilterChange('active')}>
             Active
           </button>
         </li>
         <li>
-          <button 
-            className={activeFilter === "completed" ? "selected" : ""}
-            onClick={() => onFilterChange("completed")}
+          <button
+            className={activeFilter === 'completed' ? 'selected' : ''}
+            onClick={() => onFilterChange('completed')}
           >
             Completed
           </button>
         </li>
       </ul>
     );
-  };
-};
+  }
+}
 
 TaskFilter.defaultProps = {
   activeFilter: 'all',

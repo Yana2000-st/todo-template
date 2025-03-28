@@ -1,10 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import TaskFilter from "../TasksFilter/TasksFilter";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import TaskFilter from '../TaskFilter/TaskFilter';
+
 import './Footer.css';
 
 export default class Footer extends Component {
-
+  constructor(props) {
+    super(props);
+    this.render = this.render.bind(this);
+  }
   render() {
     const { activeCount, activeFilter, onFilterChange, onClearCompleted } = this.props;
 
@@ -17,8 +22,8 @@ export default class Footer extends Component {
         </button>
       </footer>
     );
-  };
-};
+  }
+}
 
 Footer.defaultProps = {
   activeCount: 0,
