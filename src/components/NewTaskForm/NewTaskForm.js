@@ -24,14 +24,20 @@ export default class NewTaskForm extends Component {
     }
     this.setState({ [name]: value });
   }
-
+  //Сделала условие, что, когда человек не вводит время, будет уведомление
   onSubmit(e) {
     e.preventDefault();
     const { text, minutes, seconds } = this.state;
-    if (text.trim()) {
-      const timer = parseInt(minutes || '0', 10) * 60 + parseInt(seconds || '0', 10);
-      this.props.onAddTask(text, timer);
+
+    const totalMinutes = parseInt(minutes || '0', 10);
+    const totalSeconds = parseInt(seconds || '0', 10);
+    const totalTime = totalMinutes * 60 + totalSeconds;
+
+    if (text.trim() && totalTime > 0) {
+      this.props.onAddTask(text, totalTime);
       this.setState({ text: '', minutes: '', seconds: '' });
+    } else {
+      alert('Пожалуйста, установите время (минуты или секунды) и введите текст задачи. Хорошего дня =)');
     }
   }
 
