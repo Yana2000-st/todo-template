@@ -18,6 +18,10 @@ export default class NewTaskForm extends Component {
 
   onChange(e) {
     const { name, value } = e.target;
+    //Ограничиваю минуты и секунды только цифрами
+    if ((name === 'minutes' || name === 'seconds') && /[^0-9]/.test(value)) {
+      return;
+    }
     this.setState({ [name]: value });
   }
 

@@ -21,21 +21,24 @@ export default class Task extends Component {
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleInputClick = this.handleInputClick.bind(this);
     this.saveTask = this.saveTask.bind(this);
+    this.handleEscapeKey = this.handleEscapeKey.bind(this);
   }
-
+  //Запуск обновления надписи create ***
   componentDidMount() {
     this.interval = setInterval(() => {
       this.setState({
         timeAgo: formatDistanceToNow(new Date(this.props.task.createdDate), { addSuffix: true }),
       });
     }, 5000);
+    document.addEventListener('keydown', this.handleEscapeKey);
   }
-
+  //Очищаю интервал
   componentWillUnmount() {
     clearInterval(this.interval);
     document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('keydown', this.handleEscapeKey);
   }
-
+  // Включает режим редактирования при клике на текст
   handleEditClick(e) {
     e.stopPropagation();
     this.setState(
@@ -51,27 +54,34 @@ export default class Task extends Component {
       }
     );
   }
-
+  //Выход из редактирования на ESC
+  handleEscapeKey(e) {
+    if (e.key === 'Escape' && this.state.isEditing) {
+      this.setState({ isEditing: false });
+      document.removeEventListener('click', this.handleClickOutside);
+    }
+  }
+  //Отслеживает редактирования
   handleChange(e) {
     this.setState({ editText: e.target.value });
   }
-
+  //Сохраняет редактирование при нажатии Enter
   handleKeyDown(e) {
     if (e.key === 'Enter') {
       this.saveTask();
     }
   }
-
+  //Сохраняет редактирование при нажатии на любую область
   handleClickOutside(e) {
     if (this.state.isEditing && this.inputRef.current && !this.inputRef.current.contains(e.target)) {
       this.saveTask();
     }
   }
-
+  //Предотвращает закрытие при клике
   handleInputClick(e) {
     e.stopPropagation();
   }
-
+  //Сохраняет
   saveTask() {
     const { task, onEditTask } = this.props;
     const { editText } = this.state;
@@ -81,7 +91,7 @@ export default class Task extends Component {
     this.setState({ isEditing: false });
     document.removeEventListener('click', this.handleClickOutside);
   }
-
+  //Превращает количество секунд в строку
   formatTime(seconds) {
     const min = String(Math.floor(seconds / 60)).padStart(2, '0');
     const sec = String(seconds % 60).padStart(2, '0');

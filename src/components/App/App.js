@@ -12,11 +12,7 @@ export default class App extends Component {
     this.maxId = 100;
 
     this.state = {
-      tasks: [
-        this.createTodoTask('Completed task'),
-        this.createTodoTask('Editing task'),
-        this.createTodoTask('Active task'),
-      ],
+      tasks: [],
       filter: 'all',
     };
 
@@ -30,7 +26,7 @@ export default class App extends Component {
     this.pauseTimer = this.pauseTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
   }
-
+  //Новая задача
   createTodoTask(text) {
     return {
       text,
@@ -41,64 +37,83 @@ export default class App extends Component {
       isTimerRunning: false,
     };
   }
-
+  //Запускаю таймер задачи вниз
   startTimer(id) {
-    this.setState(({ tasks }) => {
-      return {
-        tasks: tasks.map((task) => {
-          if (task.id === id && !task.isTimerRunning) {
-            const intervalId = setInterval(() => {
-              this.setState((prevState) => ({
-                tasks: prevState.tasks.map((t) => {
-                  if (t.id === id) {
-                    return { ...t, timer: t.timer + 1 };
-                  }
-                  return t;
-                }),
-              }));
-            }, 1000);
+    const task = this.state.tasks.find((t) => t.id === id);
 
-            return { ...task, isTimerRunning: true, timerId: intervalId };
+    // Если таймер уже запущен или времени нет,ничего не делать
+    if (!task || task.isTimerRunning || task.timer <= 0) return;
+
+    // Создаю интервал один раз
+    const intervalId = setInterval(() => {
+      this.setState((prevState) => {
+        const updatedTasks = prevState.tasks.map((t) => {
+          if (t.id === id) {
+            const newTime = t.timer - 1;
+
+            // Останавливаю на нуле
+            if (newTime <= 0) {
+              clearInterval(t.timerId);
+              return { ...t, timer: 0, isTimerRunning: false, timerId: null };
+            }
+
+            return { ...t, timer: newTime };
           }
-          return task;
-        }),
-      };
+          return t;
+        });
+
+        return { tasks: updatedTasks };
+      });
+    }, 1000);
+
+    this.setState((prevState) => {
+      const updatedTasks = prevState.tasks.map((t) => {
+        if (t.id === id) {
+          return { ...t, isTimerRunning: true, timerId: intervalId };
+        }
+        return t;
+      });
+
+      return { tasks: updatedTasks };
     });
   }
-
+  //Пауза таймера
   pauseTimer(id) {
-    this.setState(({ tasks }) => {
-      return {
-        tasks: tasks.map((task) => {
-          if (task.id === id && task.isTimerRunning && task.timerId) {
-            clearInterval(task.timerId);
-            return { ...task, isTimerRunning: false, timerId: null };
-          }
-          return task;
-        }),
-      };
+    this.setState((prevState) => {
+      const newTasks = prevState.tasks.map((task) => {
+        if (task.id === id && task.isTimerRunning && task.timerId) {
+          clearInterval(task.timerId);
+          return { ...task, isTimerRunning: false, timerId: null };
+        }
+        return task;
+      });
+
+      return { tasks: newTasks };
     });
   }
-
+  //Сбрасывает таймер и останавливает его
   resetTimer(id) {
-    this.setState(({ tasks }) => {
-      const updatedTasks = tasks.map((task) => {
+    this.setState((prevState) => {
+      const newTasks = prevState.tasks.map((task) => {
         if (task.id === id) {
-          if (task.timerId) clearInterval(task.timerId);
+          if (task.timerId) {
+            clearInterval(task.timerId);
+          }
           return { ...task, timer: 0, isTimerRunning: false, timerId: null };
         }
         return task;
       });
-      return { tasks: updatedTasks };
+
+      return { tasks: newTasks };
     });
   }
-
+  //Удалить задачу
   deleteTask(id) {
     this.setState(({ tasks }) => {
       return { tasks: tasks.filter((task) => task.id !== id) };
     });
   }
-
+  //Добавить задачу
   addTask(text, timer) {
     const newTask = {
       ...this.createTodoTask(text),
@@ -108,7 +123,7 @@ export default class App extends Component {
       tasks: [...tasks, newTask],
     }));
   }
-
+  //Переключать
   toggleTask(id) {
     this.setState(({ tasks }) => {
       const newTasks = tasks.map((task) => {
@@ -125,7 +140,7 @@ export default class App extends Component {
       };
     });
   }
-
+  //Возвращает отфильтрованные задачи
   getFilteredTasks() {
     const { tasks, filter } = this.state;
     if (filter === 'active') {
@@ -139,13 +154,13 @@ export default class App extends Component {
   setFilter(filter) {
     this.setState({ filter });
   }
-
+  //Удаление всех завершенных задач
   clearCompleted() {
     this.setState(({ tasks }) => ({
       tasks: tasks.filter((task) => !task.completed),
     }));
   }
-
+  //Редактирование текста задачи
   editTask(id, newText) {
     this.setState(({ tasks }) => {
       const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, text: newText } : task));

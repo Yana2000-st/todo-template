@@ -1,29 +1,32 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Task from '../Task/Task';
 
 import './TaskList.css';
 
-const TaskList = ({ tasks, onDeleteTask, onToggleTask, onEditTask, onStartTimer, onPauseTimer, onResetTimer }) => {
-  return (
-    <ul className="todo-list">
-      {tasks.map((task) => (
-        <Task
-          key={task.id}
-          task={task}
-          onDeleteTask={() => onDeleteTask(task.id)}
-          onToggleTask={() => onToggleTask(task.id)}
-          onEditTask={onEditTask}
-          onStartTimer={() => onStartTimer(task.id)}
-          onPauseTimer={() => onPauseTimer(task.id)}
-          onResetTimer={() => onResetTimer(task.id)}
-        />
-      ))}
-    </ul>
-  );
-};
-
+export default class TaskList extends Component {
+  render() {
+    const { tasks, onDeleteTask, onToggleTask, onEditTask, onStartTimer, onPauseTimer, onResetTimer } = this.props;
+    return (
+      <ul className="todo-list">
+        {tasks.map((task) => (
+          <Task
+            key={task.id}
+            task={task}
+            onDeleteTask={() => onDeleteTask(task.id)}
+            onToggleTask={() => onToggleTask(task.id)}
+            onEditTask={onEditTask}
+            onStartTimer={() => onStartTimer(task.id)}
+            onPauseTimer={() => onPauseTimer(task.id)}
+            onResetTimer={() => onResetTimer(task.id)}
+          />
+        ))}
+      </ul>
+    );
+  }
+}
+//Я еще даже не изучала тайпскрипт, поэтому просто переделала на классовый компонент, после дедлайна обязательно изучу данный вопрос
 TaskList.defaultProps = {
   tasks: [],
   onDeleteTask: () => {},
@@ -49,5 +52,3 @@ TaskList.propTypes = {
   onPauseTimer: PropTypes.func.isRequired,
   onResetTimer: PropTypes.func.isRequired,
 };
-
-export default TaskList;
