@@ -8,49 +8,57 @@ export default class NewTaskForm extends Component {
     super(props);
     this.state = {
       text: '',
+      minutes: '',
+      seconds: '',
     };
 
-    this.onTextChange = this.onTextChange.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onTextChange(e) {
-    this.setState({
-      text: e.target.value,
-    });
+  onChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
 
   onSubmit(e) {
     e.preventDefault();
-    if (this.state.text.trim()) {
-      this.props.onAddTask(this.state.text);
-      this.setState({
-        text: '',
-      });
+    const { text, minutes, seconds } = this.state;
+    if (text.trim()) {
+      const timer = parseInt(minutes || '0', 10) * 60 + parseInt(seconds || '0', 10);
+      this.props.onAddTask(text, timer);
+      this.setState({ text: '', minutes: '', seconds: '' });
     }
   }
 
   render() {
+    const { text, minutes, seconds } = this.state;
+
     return (
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={this.onSubmit}>
+        <form className="new-todo-form" onSubmit={this.onSubmit}>
+          <input className="new-todo" name="text" placeholder="Task" value={text} onChange={this.onChange} autoFocus />
           <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            value={this.state.text}
-            onChange={this.onTextChange}
-            autoFocus
+            className="new-todo-form__timer"
+            name="minutes"
+            placeholder="Min"
+            value={minutes}
+            onChange={this.onChange}
           />
+          <input
+            className="new-todo-form__timer"
+            name="seconds"
+            placeholder="Sec"
+            value={seconds}
+            onChange={this.onChange}
+          />
+          <button type="submit" style={{ display: 'none' }}></button>
         </form>
       </header>
     );
   }
 }
-
-NewTaskForm.defaultProps = {
-  onAddTask: () => {},
-};
 
 NewTaskForm.propTypes = {
   onAddTask: PropTypes.func.isRequired,

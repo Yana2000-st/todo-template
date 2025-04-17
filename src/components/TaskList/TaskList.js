@@ -5,7 +5,7 @@ import Task from '../Task/Task';
 
 import './TaskList.css';
 
-const TaskList = ({ tasks, onDeleteTask, onToggleTask, onEditTask }) => {
+const TaskList = ({ tasks, onDeleteTask, onToggleTask, onEditTask, onStartTimer, onPauseTimer, onResetTimer }) => {
   return (
     <ul className="todo-list">
       {tasks.map((task) => (
@@ -15,6 +15,9 @@ const TaskList = ({ tasks, onDeleteTask, onToggleTask, onEditTask }) => {
           onDeleteTask={() => onDeleteTask(task.id)}
           onToggleTask={() => onToggleTask(task.id)}
           onEditTask={onEditTask}
+          onStartTimer={() => onStartTimer(task.id)}
+          onPauseTimer={() => onPauseTimer(task.id)}
+          onResetTimer={() => onResetTimer(task.id)}
         />
       ))}
     </ul>
@@ -25,6 +28,9 @@ TaskList.defaultProps = {
   tasks: [],
   onDeleteTask: () => {},
   onToggleTask: () => {},
+  onStartTimer: () => {},
+  onPauseTimer: () => {},
+  onResetTimer: () => {},
 };
 
 TaskList.propTypes = {
@@ -39,6 +45,9 @@ TaskList.propTypes = {
   onDeleteTask: PropTypes.func.isRequired,
   onToggleTask: PropTypes.func.isRequired,
   onEditTask: PropTypes.func.isRequired,
+  onStartTimer: PropTypes.func.isRequired,
+  onPauseTimer: PropTypes.func.isRequired,
+  onResetTimer: PropTypes.func.isRequired,
 };
 
 export default TaskList;

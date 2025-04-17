@@ -12,12 +12,14 @@ export default class Task extends Component {
       isEditing: false,
       editText: this.props.task.text,
     };
-    this.inputRef = null;
+
+    this.inputRef = React.createRef();
 
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleInputClick = this.handleInputClick.bind(this);
     this.saveTask = this.saveTask.bind(this);
   }
 
@@ -31,9 +33,11 @@ export default class Task extends Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    document.removeEventListener('click', this.handleClickOutside);
   }
 
-  handleEditClick() {
+  handleEditClick(e) {
+    e.stopPropagation();
     this.setState(
       {
         isEditing: true,
@@ -41,6 +45,9 @@ export default class Task extends Component {
       },
       () => {
         document.addEventListener('click', this.handleClickOutside);
+        if (this.inputRef.current) {
+          this.inputRef.current.focus();
+        }
       }
     );
   }
@@ -56,51 +63,75 @@ export default class Task extends Component {
   }
 
   handleClickOutside(e) {
-    if (this.state.isEditing && this.inputRef && !this.inputRef.contains(e.target)) {
+    if (this.state.isEditing && this.inputRef.current && !this.inputRef.current.contains(e.target)) {
       this.saveTask();
     }
   }
 
+  handleInputClick(e) {
+    e.stopPropagation();
+  }
+
   saveTask() {
-    this.props.onEditTask(this.props.task.id, this.state.editText);
+    const { task, onEditTask } = this.props;
+    const { editText } = this.state;
+    if (editText.trim() !== task.text) {
+      onEditTask(task.id, editText.trim());
+    }
     this.setState({ isEditing: false });
     document.removeEventListener('click', this.handleClickOutside);
   }
 
+  formatTime(seconds) {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+  }
+
   render() {
-    const { task, onDeleteTask, onToggleTask } = this.props;
-    const { isEditing, editText } = this.state;
+    const { task, onDeleteTask, onToggleTask, onStartTimer, onPauseTimer } = this.props;
+    const { isEditing, editText, timeAgo } = this.state;
 
     return (
-      <li className={task.completed ? 'completed' : ''}>
+      <li className={`todo-list-item ${task.completed ? 'completed' : ''} ${isEditing ? 'editing' : ''}`}>
         <div className="view">
-          <input className="toggle" type="checkbox" checked={task.completed} onChange={onToggleTask} />
+          <input
+            className="toggle"
+            type="checkbox"
+            checked={task.completed}
+            onChange={onToggleTask}
+            id={`toggle-${task.id}`}
+          />
+
           {isEditing ? (
             <input
               type="text"
               value={editText}
               onChange={this.handleChange}
               onKeyDown={this.handleKeyDown}
-              autoFocus
-              ref={(input) => (this.inputRef = input)}
+              ref={this.inputRef}
+              className="edit"
+              onClick={this.handleInputClick}
             />
           ) : (
-            <label onClick={this.handleEditClick}>
-              <span className="description">{task.text}</span>
-              <span className="created">{`Created ${this.state.timeAgo}`}</span>
+            <label htmlFor={`toggle-${task.id}`}>
+              <span className="description task-content" onClick={this.handleEditClick}>
+                {task.text}
+              </span>
             </label>
           )}
+
           {!isEditing && (
-            <>
+            <div className="controls">
               <button
-                className="icon icon-edit"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  this.handleEditClick();
-                }}
+                className={`icon ${task.isTimerRunning ? 'icon-pause' : 'icon-play'}`}
+                onClick={task.isTimerRunning ? () => onPauseTimer(task.id) : () => onStartTimer(task.id)}
               ></button>
-              <button className="icon icon-destroy" onClick={onDeleteTask}></button>
-            </>
+              <span className="timer">{this.formatTime(task.timer)}</span>
+              <span className="created">Created {timeAgo}</span>
+              <button className="icon icon-edit" onClick={this.handleEditClick}></button>
+              <button className="icon icon-destroy" onClick={() => onDeleteTask(task.id)}></button>
+            </div>
           )}
         </div>
       </li>
@@ -108,24 +139,18 @@ export default class Task extends Component {
   }
 }
 
-Task.defaultProps = {
-  task: {
-    text: 'New Task',
-    completed: false,
-    createdDate: new Date(),
-  },
-  onDeleteTask: () => {},
-  onToggleTask: () => {},
-  onEditTask: () => {},
-};
-
 Task.propTypes = {
   task: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
     createdDate: PropTypes.instanceOf(Date).isRequired,
+    timer: PropTypes.number,
+    isTimerRunning: PropTypes.bool,
   }).isRequired,
   onDeleteTask: PropTypes.func.isRequired,
   onToggleTask: PropTypes.func.isRequired,
   onEditTask: PropTypes.func.isRequired,
+  onStartTimer: PropTypes.func.isRequired,
+  onPauseTimer: PropTypes.func.isRequired,
 };

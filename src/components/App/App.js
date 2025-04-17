@@ -26,6 +26,9 @@ export default class App extends Component {
     this.setFilter = this.setFilter.bind(this);
     this.clearCompleted = this.clearCompleted.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+    this.pauseTimer = this.pauseTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
   }
 
   createTodoTask(text) {
@@ -34,7 +37,60 @@ export default class App extends Component {
       completed: false,
       id: this.maxId++,
       createdDate: new Date(),
+      timer: 0,
+      isTimerRunning: false,
     };
+  }
+
+  startTimer(id) {
+    this.setState(({ tasks }) => {
+      return {
+        tasks: tasks.map((task) => {
+          if (task.id === id && !task.isTimerRunning) {
+            const intervalId = setInterval(() => {
+              this.setState((prevState) => ({
+                tasks: prevState.tasks.map((t) => {
+                  if (t.id === id) {
+                    return { ...t, timer: t.timer + 1 };
+                  }
+                  return t;
+                }),
+              }));
+            }, 1000);
+
+            return { ...task, isTimerRunning: true, timerId: intervalId };
+          }
+          return task;
+        }),
+      };
+    });
+  }
+
+  pauseTimer(id) {
+    this.setState(({ tasks }) => {
+      return {
+        tasks: tasks.map((task) => {
+          if (task.id === id && task.isTimerRunning && task.timerId) {
+            clearInterval(task.timerId);
+            return { ...task, isTimerRunning: false, timerId: null };
+          }
+          return task;
+        }),
+      };
+    });
+  }
+
+  resetTimer(id) {
+    this.setState(({ tasks }) => {
+      const updatedTasks = tasks.map((task) => {
+        if (task.id === id) {
+          if (task.timerId) clearInterval(task.timerId);
+          return { ...task, timer: 0, isTimerRunning: false, timerId: null };
+        }
+        return task;
+      });
+      return { tasks: updatedTasks };
+    });
   }
 
   deleteTask(id) {
@@ -43,14 +99,14 @@ export default class App extends Component {
     });
   }
 
-  addTask(text) {
-    const newTask = this.createTodoTask(text);
-    this.setState(({ tasks }) => {
-      const newArr = [...tasks, newTask];
-      return {
-        tasks: newArr,
-      };
-    });
+  addTask(text, timer) {
+    const newTask = {
+      ...this.createTodoTask(text),
+      timer: timer || 0,
+    };
+    this.setState(({ tasks }) => ({
+      tasks: [...tasks, newTask],
+    }));
   }
 
   toggleTask(id) {
@@ -110,6 +166,9 @@ export default class App extends Component {
           onDeleteTask={this.deleteTask}
           onToggleTask={this.toggleTask}
           onEditTask={this.editTask}
+          onStartTimer={this.startTimer}
+          onPauseTimer={this.pauseTimer}
+          onResetTimer={this.resetTimer}
         />
         <Footer
           activeCount={activeCount}
