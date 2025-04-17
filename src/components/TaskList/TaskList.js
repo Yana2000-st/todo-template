@@ -31,6 +31,7 @@ TaskList.defaultProps = {
   tasks: [],
   onDeleteTask: () => {},
   onToggleTask: () => {},
+  onEditTask: () => {},
   onStartTimer: () => {},
   onPauseTimer: () => {},
   onResetTimer: () => {},

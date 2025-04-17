@@ -69,6 +69,9 @@ export default class NewTaskForm extends Component {
     );
   }
 }
+NewTaskForm.defaultProps = {
+  onAddTask: () => {},
+};
 
 NewTaskForm.propTypes = {
   onAddTask: PropTypes.func.isRequired,

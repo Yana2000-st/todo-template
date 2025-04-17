@@ -23,7 +23,7 @@ export default class Task extends Component {
     this.saveTask = this.saveTask.bind(this);
     this.handleEscapeKey = this.handleEscapeKey.bind(this);
   }
-  //Запуск обновления надписи create ***
+
   componentDidMount() {
     this.interval = setInterval(() => {
       this.setState({
@@ -32,7 +32,7 @@ export default class Task extends Component {
     }, 5000);
     document.addEventListener('keydown', this.handleEscapeKey);
   }
-  //Очищаю интервал
+
   componentWillUnmount() {
     clearInterval(this.interval);
     document.removeEventListener('click', this.handleClickOutside);
@@ -81,7 +81,7 @@ export default class Task extends Component {
   handleInputClick(e) {
     e.stopPropagation();
   }
-  //Сохраняет
+
   saveTask() {
     const { task, onEditTask } = this.props;
     const { editText } = this.state;
@@ -91,7 +91,7 @@ export default class Task extends Component {
     this.setState({ isEditing: false });
     document.removeEventListener('click', this.handleClickOutside);
   }
-  //Превращает количество секунд в строку
+  //Превращает количество секунд в строку, удобную для чтения
   formatTime(seconds) {
     const min = String(Math.floor(seconds / 60)).padStart(2, '0');
     const sec = String(seconds % 60).padStart(2, '0');
@@ -148,6 +148,14 @@ export default class Task extends Component {
     );
   }
 }
+
+Task.defaultProps = {
+  onDeleteTask: () => {},
+  onToggleTask: () => {},
+  onEditTask: () => {},
+  onStartTimer: () => {},
+  onPauseTimer: () => {},
+};
 
 Task.propTypes = {
   task: PropTypes.shape({
