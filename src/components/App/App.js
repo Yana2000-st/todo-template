@@ -88,6 +88,27 @@ export default class App extends Component {
       return { tasks: newTasks };
     });
   }
+  //Обнуление таймера, когда задача выполнена
+  componentDidUpdate(prevProps, prevState) {
+    for (let i = 0; i < this.state.tasks.length; i++) {
+      const current = this.state.tasks[i];
+      const previous = prevState.tasks.find((t) => t.id === current.id);
+
+      if (previous && !previous.completed && current.completed) {
+        this.pauseTimer(current.id);
+
+        const updatedTasks = this.state.tasks.map((task) => {
+          if (task.id === current.id) {
+            return { ...task, timer: 0 };
+          }
+          return task;
+        });
+
+        this.setState({ tasks: updatedTasks });
+        break;
+      }
+    }
+  }
 
   deleteTask(id) {
     this.setState(({ tasks }) => {
