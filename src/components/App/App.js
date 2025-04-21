@@ -58,7 +58,6 @@ const App = () => {
 
     setTasks((prev) => prev.map((task) => (task.id === id ? { ...task, isTimerRunning: false } : task)));
   };
-
   //Обнуление таймера, когда задача выполнена
   useEffect(() => {
     tasks.forEach((task) => {
